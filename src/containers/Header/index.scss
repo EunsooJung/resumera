@@ -1,0 +1,50 @@
+@import '../../styles/variables';
+.Header {
+  height: $header-height;
+  background-color: $header-bg-color;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid $border-color;
+  padding-right: 30px;
+  padding-left: 30px;
+  z-index: 1000;
+}
+
+.Header__title {
+  font-size: 2em;
+  float: left;
+  margin: 16px 24px 16px 0;
+  width: 200px;
+}
+
+.Header__Menu {
+  width: 100%;
+}
+
+.Header__Menu.menu.ui {
+  margin-top: 0;
+  .Menu__item {
+    color: $gray;
+    cursor: pointer;
+    &:hover {
+      transition: all 0.5s;
+    }
+  }
+  .Menu__item-active.item {
+    color: $gray-dark;
+    cursor: default;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+  .Util__item.item {
+    padding-right: 0;
+    padding-left: 0;
+    cursor: pointer;
+  }
+}

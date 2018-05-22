@@ -1,0 +1,18 @@
+.Home__content {
+  margin-top: 2rem;
+}
+
+.Home__label {
+  color: #999 !important;
+}
+
+.Home__Input {
+  opacity: 1 !important;
+}
+
+.Home__Input > input:disabled {
+  border: 0 !important;
+  opacity: 1 !important;
+  color: #000 !important;
+  padding-left: 0 !important;
+}
