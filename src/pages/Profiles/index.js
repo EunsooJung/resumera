@@ -1,3 +1,4 @@
+import store from 'store';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -55,8 +56,8 @@ class Profiles extends Component {
     return [
       {
         title: '',
-        key: 'imageUrl',
-        dataIndex: 'imageUrl',
+        key: 'photoURL',
+        dataIndex: 'photoURL',
         width: 30,
         render: (text, item) => {
           const index = Math.floor(Math.random() * colors.length);
@@ -66,7 +67,7 @@ class Profiles extends Component {
               {text && <Avatar src={text} />}
               {(!text || !text.length) && (
                 <Avatar style={{ backgroundColor: bgColor }}>
-                  {item.lastName.charAt(0).toUpperCase()}
+                  {item.displayName.charAt(0).toUpperCase()}
                 </Avatar>
               )}
             </div>
@@ -77,16 +78,12 @@ class Profiles extends Component {
         title: 'Name',
         key: 'name',
         render: (text, item) => {
-          return (
-            <span>
-              {item.firstName} {item.lastName}
-            </span>
-          );
+          return <span>{item.displayName}</span>;
         },
         sorter: (a, b) => {
-          if (a.firstName > b.firstName) {
+          if (a.displayName > b.displayName) {
             return 1;
-          } else if (a.firstName < b.firstName) {
+          } else if (a.displayName < b.displayName) {
             return -1;
           } else {
             return 0;
@@ -146,9 +143,20 @@ class Profiles extends Component {
       }),
     });
   };
+  getProfiles(profiles) {
+    const entries = [];
+    for (let key in profiles) {
+      const profile = {
+        ...profiles[key],
+      };
+      entries.push(profile);
+    }
+    return entries;
+  }
 
   render() {
     const { profiles } = this.state;
+    const dataSource = this.getProfiles(profiles);
     return (
       <div className={cx('Profiles__content')}>
         <Row className={cx('Input__Search')}>
@@ -160,7 +168,7 @@ class Profiles extends Component {
           <Col span={20} offset={2}>
             <Table
               rowKey={row => row.id}
-              dataSource={profiles}
+              dataSource={dataSource}
               columns={this.getColumns()}
               pagination={{
                 pageSize: 10,

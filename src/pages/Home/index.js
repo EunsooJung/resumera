@@ -1,3 +1,4 @@
+import store from 'store';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -13,28 +14,29 @@ const cx = classNames.bind(styles);
 
 class Home extends Component {
   static propTypes = {
+    auth: PropTypes.object,
     user: PropTypes.object,
     updateUser: PropTypes.func,
   };
 
   state = {
     isDisabled: true,
-    firstName: this.props.user.firstName,
-    lastName: this.props.user.lastName,
-    email: this.props.user.email,
-    jobTitle: this.props.user.jobTitle,
-    skills: this.props.user.skills,
-    degree: this.props.user.degree,
+    displayName: this.props.auth.displayName,
+    email: this.props.auth.email,
+    photoURL: this.props.auth.photoURL,
+    jobTitle: this.props.auth.jobTitle,
+    skills: this.props.auth.skills,
+    degree: this.props.auth.degree,
   };
 
   static getDerivedStateFromProps(nextProps) {
     return {
-      firstName: nextProps.user.firstName,
-      lastName: nextProps.user.lastName,
-      email: nextProps.user.email,
-      jobTitle: nextProps.user.jobTitle,
-      skills: nextProps.user.skills,
-      degree: nextProps.user.degree,
+      displayName: nextProps.user.displayName || nextProps.auth.displayName,
+      email: nextProps.user.email || nextProps.auth.email,
+      photoURL: nextProps.user.photoURL || nextProps.auth.photoURL,
+      jobTitle: nextProps.user.jobTitle || nextProps.auth.jobTitle,
+      skills: nextProps.user.skills || nextProps.auth.skills,
+      degree: nextProps.user.degree || nextProps.auth.degree,
     };
   }
 
@@ -55,13 +57,22 @@ class Home extends Component {
   };
 
   onClickSave = () => {
-    const { firstName, lastName, jobTitle, skills, degree } = this.state;
-    this.props.updateUser({
-      firstName,
-      lastName,
+    const {
+      displayName,
+      email,
+      photoURL,
       jobTitle,
       skills,
       degree,
+    } = this.state;
+
+    this.props.updateUser(store.get('uid'), {
+      displayName,
+      email,
+      photoURL: photoURL || '',
+      jobTitle: jobTitle || '',
+      skills: skills || [],
+      degree: degree || '',
     });
     this.setState({
       isDisabled: true,
@@ -71,8 +82,7 @@ class Home extends Component {
   render() {
     const {
       isDisabled,
-      firstName,
-      lastName,
+      displayName,
       email,
       jobTitle,
       skills,
@@ -84,29 +94,16 @@ class Home extends Component {
         <Form layout="vertical">
           <Row>
             <Col span={6} offset={9}>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item label="First Name">
-                    <Input
-                      name="firstName"
-                      value={firstName}
-                      className={cx('Home__Input')}
-                      disabled={isDisabled}
-                      onChange={this.onChangeInput}
-                    />
-                  </Form.Item>
-                </Col>
-                <Col span={12}>
-                  <Form.Item label="First Name">
-                    <Input
-                      name="lastName"
-                      value={lastName}
-                      className={cx('Home__Input')}
-                      disabled={isDisabled}
-                      onChange={this.onChangeInput}
-                    />
-                  </Form.Item>
-                </Col>
+              <Row>
+                <Form.Item label="Name">
+                  <Input
+                    name="displayName"
+                    value={displayName}
+                    className={cx('Home__Input')}
+                    disabled={isDisabled}
+                    onChange={this.onChangeInput}
+                  />
+                </Form.Item>
               </Row>
               <Row>
                 <Form.Item label="Email">
@@ -114,7 +111,8 @@ class Home extends Component {
                     name="email"
                     value={email}
                     className={cx('Home__Input')}
-                    disabled
+                    disabled={isDisabled}
+                    onChange={this.onChangeInput}
                   />
                 </Form.Item>
               </Row>
@@ -143,7 +141,7 @@ class Home extends Component {
               <Row>
                 <Form.Item label="Degree">
                   <Input
-                    name="Degree"
+                    name="degree"
                     value={degree}
                     className={cx('Home__Input')}
                     disabled={isDisabled}

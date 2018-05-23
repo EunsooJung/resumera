@@ -4,9 +4,8 @@ import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import { signIn } from '../../actions/user';
+import { signIn, getCurrentUser } from '../../actions/user';
 import GoogleButton from 'react-google-button';
-import GoogleLogin from 'react-google-login';
 
 import { Row, Col } from 'antd';
 
@@ -19,32 +18,8 @@ class Landing extends Component {
     signIn: PropTypes.func,
   };
 
-  state = {
-    email: null,
-    password: null,
-  };
-
-  onClickGoogleSignIn = response => {
-    const {
-      givenName,
-      familyName,
-      email,
-      googleId,
-      imageUrl,
-    } = response.profileObj;
-    const user = {
-      firstName: givenName,
-      lastName: familyName,
-      email,
-      googleId,
-      imageUrl,
-    };
-
-    this.props.signIn(user, this.props.history);
-  };
-
-  onGoogleSigninSuccess = resp => {
-    console.log(resp);
+  onClickGoogleButton = () => {
+    this.props.signIn(this.props.history);
   };
 
   render() {
@@ -52,15 +27,7 @@ class Landing extends Component {
       <div className={cx('Landing__content')}>
         <Row>
           <Col span={4} offset={10}>
-            <a href="https://resumera-api.herokuapp.com/auth/google">
-              <GoogleButton />
-            </a>
-            <GoogleLogin
-              className={cx('googleLoginButton')}
-              clientId="547403104179-rlg3l7dcqgjbjukun227pqdndk2f5fhc.apps.googleusercontent.com"
-              buttonText={<GoogleButton />}
-              onSuccess={this.onGoogleSigninSuccess}
-            />
+            <GoogleButton onClick={this.onClickGoogleButton} />
           </Col>
         </Row>
       </div>
@@ -70,6 +37,7 @@ class Landing extends Component {
 
 const mapDispatchToProps = dispatch => ({
   signIn: bindActionCreators(signIn, dispatch),
+  getCurrentUser: bindActionCreators(getCurrentUser, dispatch),
   dispatch,
 });
 

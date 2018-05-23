@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './reactStore';
 import Auth from './components/Auth';
+import firebase from 'firebase';
 
 import ACTIONS from './constants/actions';
 
@@ -20,6 +21,16 @@ import './styles/main.scss';
 
 const reactStore = configureStore();
 if (typeof window !== 'undefined') window.debugStore = reactStore;
+
+const config = {
+    apiKey: "AIzaSyBkg1pKKNnyi76e4UL7OYUTgToosSEFKho",
+    authDomain: "resumera-486bb.firebaseapp.com",
+    databaseURL: "https://resumera-486bb.firebaseio.com",
+    projectId: "resumera-486bb",
+    storageBucket: "",
+    messagingSenderId: "658504040435"
+};
+firebase.initializeApp(config);
 
 if (store.get('token')) {
   reactStore.dispatch({ type: ACTIONS.AUTH_USER });

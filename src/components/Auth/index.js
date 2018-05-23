@@ -1,6 +1,10 @@
+import store from 'store';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { getCurrentUser } from '../../actions/user';
 
 export default function(ComposedComponent) {
   class Authenticate extends Component {
@@ -11,7 +15,12 @@ export default function(ComposedComponent) {
     static propTypes = {
       auth: PropTypes.object,
       user: PropTypes.object,
+      getCurrentUser: PropTypes.func,
     };
+
+    componentDidMount() {
+      this.props.getCurrentUser(store.get('uid'));
+    }
 
     componentWillReceiveProps(nextProps) {
       if (!nextProps.auth.authenticated) {
@@ -29,5 +38,10 @@ export default function(ComposedComponent) {
     user: state.user,
   });
 
-  return connect(mapStateToProps)(Authenticate);
+  const mapDispatchToProps = dispatch => ({
+    getCurrentUser: bindActionCreators(getCurrentUser, dispatch),
+    dispatch,
+  });
+
+  return connect(mapStateToProps, mapDispatchToProps)(Authenticate);
 }

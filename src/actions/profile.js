@@ -1,17 +1,17 @@
-import profileAPI from '../dataProviders/profile';
+import firebase from 'firebase';
 import ACTIONS from '../constants/actions';
 import { profiles } from './mockProfiles';
 
 export function getProfiles() {
   return async dispatch => {
-    try {
-      // const profiles = await profileAPI.get()
+    const db = firebase.database();
+    const dbRef = db.ref().child('profiles');
+
+    dbRef.on('value', snap => {
       dispatch({
         type: ACTIONS.GET_PROFILES,
-        value: profiles,
+        value: snap.val(),
       });
-    } catch (err) {
-      console.error(err);
-    }
+    });
   };
 }
