@@ -24,7 +24,7 @@ export function signOut(route) {
 }
 
 export function getCurrentUser() {
-  return aync dispatch => {
+  return async dispatch => {
     const user = await userAPI.getCurrentUser()
     console.log(user)
     dispatch({
