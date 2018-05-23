@@ -1,106 +1,185 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
 
-import { getProfiles } from '../../actions/profile'
+import { getProfiles } from '../../actions/profile';
 
-import { Grid } from 'semantic-ui-react'
-import { Table } from 'antd'
+import { Row, Col, Table, Input, Avatar } from 'antd';
 
-import 'antd/es/table/style/index.css';
-import 'antd/es/pagination/style/index.css';
-import 'antd/es/style/index.css';
-
-import classNames from 'classnames/bind'
-import styles from './index.scss'
-const cx = classNames.bind(styles)
+import classNames from 'classnames/bind';
+import styles from './index.scss';
+const cx = classNames.bind(styles);
+const colors = [
+  '#F44336',
+  '#E91E63',
+  '#9C27B0',
+  '#673AB7',
+  '#3F51B5',
+  '#2196F3',
+  '#03A9F4',
+  '#00BCD4',
+  '#009688',
+  '#4CAF50',
+  '#689F38',
+  '#C0CA33',
+  '#FBC02D',
+  '#EF6C00',
+  '#FF5722',
+  '#795548',
+];
 
 class Profiles extends Component {
   static propTypes = {
     profiles: PropTypes.array,
-    getProfiles: PropTypes.func
-  }
+    getProfiles: PropTypes.func,
+  };
 
   state = {
-    profiles: []
-  }
+    initialProfiles: [],
+    profiles: [],
+  };
 
   componentDidMount() {
-    this.props.getProfiles()
+    this.props.getProfiles();
   }
 
   static getDerivedStateFromProps(nextProps) {
     return {
-      profiles: nextProps.profiles
-    }
+      initialProfiles: nextProps.profiles,
+      profiles: nextProps.profiles,
+    };
   }
 
   getColumns = () => {
     return [
       {
+        title: '',
+        key: 'imageUrl',
+        dataIndex: 'imageUrl',
+        width: 30,
+        render: (text, item) => {
+          const index = Math.floor(Math.random() * colors.length);
+          const bgColor = colors[index];
+          return (
+            <div>
+              {text && <Avatar src={text} />}
+              {(!text || !text.length) && (
+                <Avatar style={{ backgroundColor: bgColor }}>
+                  {item.lastName.charAt(0).toUpperCase()}
+                </Avatar>
+              )}
+            </div>
+          );
+        },
+      },
+      {
         title: 'Name',
         key: 'name',
         render: (text, item) => {
-          return <span>{item.firstName} { item.lastName}</span>
-        }
+          return (
+            <span>
+              {item.firstName} {item.lastName}
+            </span>
+          );
+        },
+        sorter: (a, b) => {
+          if (a.firstName > b.firstName) {
+            return 1;
+          } else if (a.firstName < b.firstName) {
+            return -1;
+          } else {
+            return 0;
+          }
+        },
       },
       {
         title: 'Email',
         key: 'email',
-        dataIndex: 'email'
+        dataIndex: 'email',
+        sorter: (a, b) => {
+          if (a.email > b.email) {
+            return 1;
+          } else if (a.email < b.email) {
+            return -1;
+          } else {
+            return 0;
+          }
+        },
       },
       {
         title: 'Job Title',
         key: 'jobTitle',
-        dataIndex: 'jobTitle'
+        dataIndex: 'jobTitle',
       },
       {
         title: 'Skills',
         key: 'skills',
         render: (text, item) => {
-          const skills = (item.skills || []).join(',')
-          return <span>{skills}</span>
-        }
+          const skills = (item.skills || []).join(',');
+          return <span>{skills}</span>;
+        },
       },
       {
         title: 'Degree',
         key: 'degree',
-        dataIndex: 'degree'
-      }
-    ]
-  }
+        dataIndex: 'degree',
+      },
+    ];
+  };
+
+  onSearch = value => {
+    const { initialProfiles } = this.state;
+    this.setState({
+      profiles: initialProfiles.filter(profile => {
+        return (
+          profile.firstName.toLowerCase().includes(value.toLowerCase()) ||
+          profile.lastName.toLowerCase().includes(value.toLowerCase()) ||
+          profile.email.toLowerCase().includes(value.toLowerCase()) ||
+          profile.jobTitle.toLowerCase().includes(value.toLowerCase()) ||
+          profile.skills
+            .join(',')
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          profile.degree.toLowerCase().includes(value.toLowerCase())
+        );
+      }),
+    });
+  };
 
   render() {
-    const { profiles } = this.state
+    const { profiles } = this.state;
     return (
       <div className={cx('Profiles__content')}>
-        <Grid columns='equal'>
-          <Grid.Column />
-          <Grid.Column width={14}>
+        <Row className={cx('Input__Search')}>
+          <Col span={6} offset={16}>
+            <Input.Search onSearch={this.onSearch} enterButton />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={20} offset={2}>
             <Table
-              rowKey={row => row.email}
+              rowKey={row => row.id}
               dataSource={profiles}
               columns={this.getColumns()}
               pagination={{
                 pageSize: 10,
               }}
             />
-          </Grid.Column>
-          <Grid.Column />
-        </Grid>
+          </Col>
+        </Row>
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
-  profiles: state.profiles
-})
+  profiles: state.profiles,
+});
 
 const mapDispatchToProps = dispatch => ({
   getProfiles: bindActionCreators(getProfiles, dispatch),
-  dispatch
-})
+  dispatch,
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Profiles)
+export default connect(mapStateToProps, mapDispatchToProps)(Profiles);

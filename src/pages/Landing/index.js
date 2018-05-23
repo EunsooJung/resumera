@@ -1,59 +1,76 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import PropTypes from 'prop-types'
-import { withRouter } from 'react-router-dom'
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
-import { Grid } from 'semantic-ui-react'
-import { signIn } from '../../actions/user'
-import GoogleButton from 'react-google-button'
-import GoogleLogin from 'react-google-login'
+import { signIn } from '../../actions/user';
+import GoogleButton from 'react-google-button';
+import GoogleLogin from 'react-google-login';
 
-import classNames from 'classnames/bind'
-import styles from './index.scss'
-const cx = classNames.bind(styles)
+import { Row, Col } from 'antd';
+
+import classNames from 'classnames/bind';
+import styles from './index.scss';
+const cx = classNames.bind(styles);
 
 class Landing extends Component {
   static propTypes = {
-    signIn: PropTypes.func
-  }
+    signIn: PropTypes.func,
+  };
 
   state = {
     email: null,
-    password: null
-  }
-
-  onClickGoogleButton = () => {
-    this.props.signIn()
-  }
+    password: null,
+  };
 
   onClickGoogleSignIn = response => {
-    console.log(response)
-  }
+    const {
+      givenName,
+      familyName,
+      email,
+      googleId,
+      imageUrl,
+    } = response.profileObj;
+    const user = {
+      firstName: givenName,
+      lastName: familyName,
+      email,
+      googleId,
+      imageUrl,
+    };
+
+    this.props.signIn(user, this.props.history);
+  };
+
+  onGoogleSigninSuccess = resp => {
+    console.log(resp);
+  };
 
   render() {
     return (
       <div className={cx('Landing__content')}>
-        <Grid verticalAlign="middle" columns='equal'>
-          <Grid.Column />
-          <Grid.Column width={4}>
+        <Row>
+          <Col span={4} offset={10}>
+            <a href="https://resumera-api.herokuapp.com/auth/google">
+              <GoogleButton />
+            </a>
             <GoogleLogin
               className={cx('googleLoginButton')}
-              clientId="547403104179-rai5kch2q1faupika73ddpsict5f1u8b.apps.googleusercontent.com"
-              buttonText={<GoogleButton type='light' />}
-              onSuccess={this.onClickGoogleSignIn}
+              clientId="547403104179-rlg3l7dcqgjbjukun227pqdndk2f5fhc.apps.googleusercontent.com"
+              buttonText={<GoogleButton />}
+              onSuccess={this.onGoogleSigninSuccess}
             />
-          </Grid.Column>
-          <Grid.Column />
-        </Grid>
+          </Col>
+        </Row>
       </div>
-    )
+    );
   }
 }
 
 const mapDispatchToProps = dispatch => ({
   signIn: bindActionCreators(signIn, dispatch),
-  dispatch
-})
+  dispatch,
+});
 
-export default withRouter(connect(null, mapDispatchToProps)(Landing))
+export default withRouter(connect(null, mapDispatchToProps)(Landing));

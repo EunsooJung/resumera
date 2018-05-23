@@ -1,26 +1,26 @@
-import store from 'store'
-import userAPI from '../dataProviders/user'
-import ACTIONS from '../constants/actions'
+import store from 'store';
+import userAPI from '../dataProviders/user';
+import ACTIONS from '../constants/actions';
 
 export function signIn(userData, route) {
   return async dispatch => {
-    const user = await userAPI.login()
+    // const user = await userAPI.login()
     dispatch({
       type: ACTIONS.AUTH_USER,
-      value: user
-    })
-    route.push('/home')
-  }
+      value: userData,
+    });
+    route.push('/home');
+  };
 }
 
 export function signOut(route) {
   return dispatch => {
-    store.remove('token')
+    store.remove('token');
     dispatch({
       type: ACTIONS.UNAUTH_USER,
-    })
-    route.push('/')
-  }
+    });
+    route.push('/');
+  };
 }
 
 export function getCurrentUser() {
@@ -32,13 +32,13 @@ export function getCurrentUser() {
       lastName: 'Jung',
       jobTitle: 'Software Engineer',
       skills: ['JAVA', 'Spring'],
-      degree: 'Master of Science'
-    }
+      degree: 'Master of Science',
+    };
     dispatch({
       type: ACTIONS.GET_USER,
       value: user,
-    })
-  }
+    });
+  };
 }
 
 export function updateUser(user) {
@@ -47,10 +47,10 @@ export function updateUser(user) {
       // await userAPI.update(user)
       dispatch({
         type: ACTIONS.UPDATE_USER,
-        value: user
-      })
+        value: user,
+      });
     } catch (err) {
-      console.error(err)
+      console.error(err);
     }
-  }
+  };
 }

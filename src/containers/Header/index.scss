@@ -1,7 +1,7 @@
 @import '../../styles/variables';
 .Header {
   height: $header-height;
-  background-color: $header-bg-color;
+  background-color: $header-dark;
   position: fixed;
   top: 0;
   left: 0;
@@ -9,21 +9,24 @@
   width: 100%;
   display: flex;
   align-items: center;
-  border-bottom: 1px solid $border-color;
   padding-right: 30px;
   padding-left: 30px;
   z-index: 1000;
 }
 
-.Header__title {
-  font-size: 2em;
+.ant-menu-dark.ant-menu-horizontal>.ant-menu-item.Header__title {
+  font-size: 1.5em;
   float: left;
-  margin: 16px 24px 16px 0;
-  width: 200px;
+  color: $yellow;
+  margin-right: 20px;
+  cursor: default;
+  &:hover {
+    color: $yellow;
+  }
 }
 
 .Header__Menu {
-  width: 100%;
+    width: 100%;
 }
 
 .Header__Menu.menu.ui {
@@ -47,4 +50,8 @@
     padding-left: 0;
     cursor: pointer;
   }
+}
+
+.ant-menu-horizontal > .ant-menu-item.Menu__util {
+  float: right;
 }

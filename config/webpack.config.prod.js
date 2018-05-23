@@ -223,7 +223,7 @@ module.exports = {
                       loader: require.resolve('css-loader'),
                       options: {
                         importLoaders: 1,
-                        localIdentName: '[local]-[hash:base64:5]',
+                        localIdentName: '[local]',
                         minimize: true,
                         sourceMap: shouldUseSourceMap,
                       },

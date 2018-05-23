@@ -7,12 +7,14 @@
 }
 
 .Home__Input {
-  opacity: 1 !important;
+  opacity: 1;
 }
 
-.Home__Input > input:disabled {
-  border: 0 !important;
-  opacity: 1 !important;
-  color: #000 !important;
-  padding-left: 0 !important;
+.Home__Input:disabled {
+  font-weight: bold;
+  border: 0;
+  color: #000;
+  padding-left: 0;
+  background-color: #fff;
+  cursor: text;
 }

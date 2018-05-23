@@ -1,9 +1,9 @@
-import axios from 'axios'
+import axios from 'axios';
 
 function get() {
-  return axios.get('profiles')
+  return axios.get('profiles');
 }
 
 export default {
-  get
-}
+  get,
+};
