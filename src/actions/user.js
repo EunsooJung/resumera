@@ -3,7 +3,7 @@ import userAPI from '../dataProviders/user';
 import ACTIONS from '../constants/actions';
 
 export function signIn(userData, route) {
-  return async dispatch => {
+  return dispatch => {
     // const user = await userAPI.login()
     dispatch({
       type: ACTIONS.AUTH_USER,
@@ -35,7 +35,7 @@ export function getCurrentUser() {
 }
 
 export function updateUser(user) {
-  return async dispatch => {
+  return dispatch => {
     try {
       // await userAPI.update(user)
       dispatch({
