@@ -24,16 +24,9 @@ export function signOut(route) {
 }
 
 export function getCurrentUser() {
-  return dispatch => {
-    const user = {
-      id: 1234,
-      email: 'eunsoojung@email.com',
-      firstName: 'Eun Soo',
-      lastName: 'Jung',
-      jobTitle: 'Software Engineer',
-      skills: ['JAVA', 'Spring'],
-      degree: 'Master of Science',
-    };
+  return aync dispatch => {
+    const user = await userAPI.getCurrentUser()
+    console.log(user)
     dispatch({
       type: ACTIONS.GET_USER,
       value: user,

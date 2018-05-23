@@ -9,7 +9,12 @@ function update(user) {
   return axios.put('/users', user);
 }
 
+function getCurrentUser() {
+  return axios.get(`${serverUrl}/api/current_user`)
+}
+
 export default {
   login,
   update,
+  getCurrentUser
 };
